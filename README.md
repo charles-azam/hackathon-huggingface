@@ -14,11 +14,22 @@ Ensuite, vérifiez que l'environnement python de vscode soit bien `.venv`.
 
 ## usage
 
-Pour rajouter un package faites `uv add`.
+Pour rajouter un package faites `uv add`. Sinon refaites un `uv sync`.
+
+Pour vérifier que tout est bien installé, lancez:
+`uv run pytest tests`
+
+Vous pouvez aussi lancer ces commandes dans le terminal python:
+
+```python
+from loulou.hello import hello_word
+print(hello_world)
+```
+
 
 ## Git
 
-Pour git je vous propose, afin que tout se passe bien d'utiliser le workflow suivant (que tout le monde utilise):
+Pour git je vous propose, afin que tout se passe bien d'utiliser le workflow suivant:
 
 ```bash
 git checkout -b elias/coucou # pour faire sa branche
@@ -37,5 +48,6 @@ git checkout elias/coucou # on retourne sur sa branche
 git rebase main # équivalent à git merge mais plus simple à debugger
 
 git push --force-with-lease
+# maintenant vous pouvez ouvrir votre PR
 
 ```
