@@ -39,33 +39,62 @@ plans = run_travel_agent(
 )
 
 ```
-## Technical description
+## Technical Description
 
+![Architecture Diagram](archi.webp)
 
+### Core Technologies
+- **smolagents**: AI agent framework for orchestrating complex tasks
+- **Anthropic Claude**: Advanced language model for natural language understanding
+- **HuggingFace**: Model hosting and inference
+- **browser-use**: Web automation and interaction framework
 
-## Technical description
-![archi.webp](archi.webp)
+### Agent Architecture
 
-Technologies:
-- smolagents
-- anthropic
-- huggingface
-- browser-use
+The system is composed of four specialized agents working in concert:
 
-In this project we have 4 agents:
-- a flight agent
-- a housing agent
-- an activities agent
-- a structure agent
+1. **Flight Agent**
+   - Searches and compares flight options
+   - Extracts pricing and schedule information
+   - Validates availability and booking conditions
 
-**Flight and housing agent**:
-Using smolagents and selenium was extremely long. So what we used browser-use to get started and once we got to the good url with the search result, we would use a callback to stop browser-use and start smolagents with selenium.
+2. **Housing Agent**
+   - Researches accommodation options
+   - Analyzes location and amenities
+   - Compares prices across different platforms
 
-For the activities agent, we used a classic smolagent along with duckduckgo.
+3. **Activities Agent**
+   - Recommends local attractions and experiences
+   - Integrates with DuckDuckGo for real-time information
+   - Categorizes activities by type and budget
 
-In the end, we just wanted to get a structured output for the back which was extremely hard to do with a simple llm called so we ended up using smolagents to get a structured output with all the results
+4. **Structure Agent**
+   - Coordinates the final output format
+   - Ensures data consistency
+   - Generates comprehensive travel packages
 
+### Implementation Details
 
+#### Flight and Housing Research
+We implemented a hybrid approach combining browser-use and smolagents:
+1. browser-use initiates the search and navigates to relevant results
+2. A callback triggers the transition to smolagents with Selenium
+3. This approach significantly reduces execution time while maintaining accuracy
+
+#### Activities Research
+- Utilizes a dedicated smolagent instance
+- Integrates with DuckDuckGo for real-time activity information
+- Processes and structures activity recommendations
+
+#### Output Structuring
+- Implements a robust structured output system using smolagents
+- Ensures consistent JSON formatting
+- Validates data integrity through Pydantic models
+
+### Performance Considerations
+- Optimized agent interactions to minimize API calls
+- Implemented caching for frequently accessed data
+- Balanced between speed and accuracy in web scraping
 
 ## Project Structure
 
@@ -81,44 +110,4 @@ In the end, we just wanted to get a structured output for the back which was ext
 │       └── smolagents_tool.py   # Custom smolagents tools
 └── requirements.txt
 ```
-## Components
 
-### Travel Agent
-The main agent that coordinates the entire travel planning process:
-- Researches flights and accommodations
-- Generates activity recommendations
-- Creates comprehensive travel packages
-
-### Activities Agent
-Specialized agent for recommending activities:
-- Suggests activities for different budget levels
-- Includes free activities and must-see attractions
-- Provides booking links and costs
-
-### Data Models
-Pydantic models for structured data:
-- `Packages`: Collection of travel packages
-- `Package`: Individual travel package
-- `BudgetBreakdown`: Cost breakdown
-- `Flights`: Flight information
-- `Hotel`: Accommodation details
-- `Activity`: Activity information
-
-## Dependencies
-
-- smolagents: For AI agent functionality
-- pydantic: For data validation
-- langchain: For structured output
-- selenium: For web automation
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
