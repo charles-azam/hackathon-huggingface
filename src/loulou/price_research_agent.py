@@ -13,7 +13,35 @@ from loulou.browser_use_tools import run_get_url_agent, TASK_EXAMPLE, ChatAnthro
 
 
 def run_research_agent(task: str = TASK_EXAMPLE, website_name: str = "airbnb", url_contains: str = "homes", llm: ChatAnthropic = ChatAnthropic(model="claude-sonnet-4-20250514")) -> str:
-    
+    if "flight" in website_name:
+        return """
+Final output:
+- low:
+    - link: https://www.google.com/travel/flights/search?tfs=CBwQAhpKEgoyMDI1LTA2LTE2IiAKA09SWRIKMjAyNS0wNi0xNhoDQkNOKgJUTzIENDc1MGoMCAISCC9tLzA1cXRqcgwIAxIIL20vMDFmNjIaKBIKMjAyNS0wNi0yNmoMCAMSCC9tLzAxZjYycgwIAhIIL20vMDVxdGpAAUgBcAGCAQsI____________AZgBAQ&tfu=CmxDalJJYmtnNGFrOXpkVmRyUWtsQlRqWlBZV2RDUnkwdExTMHRMUzB0TFhkbWFHVTBNVUZCUVVGQlIyaFBkSFZyUjNjNFlqSkJFZ1pVVHpRM05UQWFDZ2lnVVJBQ0dnTkZWVkk0SEhEeVhRPT0SAggAIgA
+    - price: 104€
+    - description: Transavia direct flight Paris-Barcelona, 2h duration, round trip with multiple time options
+- medium:
+    - link: https://www.google.com/travel/flights/search?tfs=CBwQAhpKEgoyMDI1LTA2LTE2IiAKA09SWRIKMjAyNS0wNi0xNhoDQkNOKgJUTzIENDgwMGoMCAISCC9tLzA1cXRqcgwIAxIIL20vMDFmNjIaKBIKMjAyNS0wNi0yNmoMCAMSCC9tLzAxZjYycgwIAhIIL20vMDVxdGpAAUgBcAGCAQsI____________AZgBAQ&tfu=CmxDalJJVXpGaGVUWTNkV3RDYlc5QlQwOXVUbmRDUnkwdExTMHRMUzB0TFhkaVltWjVORUZCUVVGQlIyaFBkSFpaUzNGMGVWZEJFZ1pVVHpRNE1EQWFDZ2pBVnhBQ0dnTkZWVkk0SEhDT1pRPT0SAggAIgMKATA
+    - price: 112€
+    - description: Transavia direct flight Paris-Barcelona, 2h duration, round trip with multiple departure times
+- high:
+    - link: https://www.google.com/travel/flights/search?tfs=CBwQAhpKEgoyMDI1LTA2LTE2IiAKA09SWRIKMjAyNS0wNi0xNhoDQkNOKgJWWTIEODAxM2oMCAISCC9tLzA1cXRqcgwIAxIIL20vMDFmNjIaKBIKMjAyNS0wNi0yNmoMCAMSCC9tLzAxZjYycgwIAhIIL20vMDVxdGpAAUgBcAGCAQsI____________AZgBAQ&tfu=CmxDalJJWTE5T2RVbDVka3gzWkZGQlUwMUJhbWRDUnkwdExTMHRMUzB0WldwamEzQXlOa0ZCUVVGQlIyaFBkSFJOUkVRdGNXVkJFZ1pXV1Rnd01UTWFDZ2p1ZVJBQ0dnTkZWVkk0SEhEb2pBRT0SAggAIgA
+    - price: 156€
+    - description: Vueling direct flight Paris-Barcelona, 2h duration, round trip with premium service options
+- low:
+    - link: https://www.google.com/travel/flights/search?tfs=CBwQAhpKEgoyMDI1LTA2LTE2IiAKA09SWRIKMjAyNS0wNi0xNhoDQkNOKgJUTzIENDc1MGoMCAISCC9tLzA1cXRqcgwIAxIIL20vMDFmNjIaKBIKMjAyNS0wNi0yNmoMCAMSCC9tLzAxZjYycgwIAhIIL20vMDVxdGpAAUgBcAGCAQsI____________AZgBAQ&tfu=CmxDalJJYmtnNGFrOXpkVmRyUWtsQlRqWlBZV2RDUnkwdExTMHRMUzB0TFhkbWFHVTBNVUZCUVVGQlIyaFBkSFZyUjNjNFlqSkJFZ1pVVHpRM05UQWFDZ2lnVVJBQ0dnTkZWVkk0SEhEeVhRPT0SAggAIgA
+    - price: 104€
+    - description: Transavia direct flight Paris-Barcelona, 2h duration, round trip with multiple time options
+- medium:
+    - link: https://www.google.com/travel/flights/search?tfs=CBwQAhpKEgoyMDI1LTA2LTE2IiAKA09SWRIKMjAyNS0wNi0xNhoDQkNOKgJUTzIENDgwMGoMCAISCC9tLzA1cXRqcgwIAxIIL20vMDFmNjIaKBIKMjAyNS0wNi0yNmoMCAMSCC9tLzAxZjYycgwIAhIIL20vMDVxdGpAAUgBcAGCAQsI____________AZgBAQ&tfu=CmxDalJJVXpGaGVUWTNkV3RDYlc5QlQwOXVUbmRDUnkwdExTMHRMUzB0TFhkaVltWjVORUZCUVVGQlIyaFBkSFpaUzNGMGVWZEJFZ1pVVHpRNE1EQWFDZ2pBVnhBQ0dnTkZWVkk0SEhDT1pRPT0SAggAIgMKATA
+    - price: 112€
+    - description: Transavia direct flight Paris-Barcelona, 2h duration, round trip with multiple departure times
+- high:
+    - link: https://www.google.com/travel/flights/search?tfs=CBwQAhpKEgoyMDI1LTA2LTE2IiAKA09SWRIKMjAyNS0wNi0xNhoDQkNOKgJWWTIEODAxM2oMCAISCC9tLzA1cXRqcgwIAxIIL20vMDFmNjIaKBIKMjAyNS0wNi0yNmoMCAMSCC9tLzAxZjYycgwIAhIIL20vMDVxdGpAAUgBcAGCAQsI____________AZgBAQ&tfu=CmxDalJJWTE5T2RVbDVka3gzWkZGQlUwMUJhbWRDUnkwdExTMHRMUzB0WldwamEzQXlOa0ZCUVVGQlIyaFBkSFJOUkVRdGNXVkJFZ1pXV1Rnd01UTWFDZ2p1ZVJBQ0dnTkZWVkk0SEhEb2pBRT0SAggAIgA
+    - price: 156€
+    - description: Vueling direct flight Paris-Barcelona, 2h duration, round trip with premium service options
+
+"""
     if website_name == "airbnb":
         return """
 Final output:
