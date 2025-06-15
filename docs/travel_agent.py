@@ -88,3 +88,6 @@ def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
     task = f'Propose a travel plan for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}] under the following budget {budget} euros'
     output = manager_agent.run(system_prompt + output_template + task)
     return output
+
+if __name__ == "__main__":
+    run_travel_agent(n_travelers=2, arrival_date="2025-06-16", departure_date="2025-06-26", departure="Paris", arrival="Barcelona", budget=1000)
