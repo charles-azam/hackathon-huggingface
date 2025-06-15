@@ -8,78 +8,84 @@ from selenium.webdriver.common.keys import Keys
 import helium
 
 # import agents
-from loulou.price_research_agent import run_research_agent
+from src.loulou.price_research_agent import run_research_agent
 
 
-haiku = 'anthropic/claude-3-5-haiku-20241022'
-sonnet = 'anthropic/claude-sonnet-4-20250514'
 
+def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
+                      departure: str,arrival: str, budget: float
+) -> str:
+    """
+    Generates personalized travel plans for a group of travelers using an AI-powered planning agent.
 
-# define all agents and tools
-# flight_agent = 
-# airbnb_agent = 
-# activities_agent = 
-# managed_agents = [flight_agent, airbnb_agent, activities_agent]
+    This function utilizes a CodeAgent configured with the Claude Sonnet model and equipped with
+    a research tool to search for accommodations (e.g., via Airbnb). It builds a travel plan by
+    gathering flight, housing, and activity suggestions, and combines them into three budget tiers:
+    low cost, medium cost, and high cost.
 
-# tools
-airbnb_search = tool(run_research_agent)
-tools_list = [airbnb_search]
-# final checks
+    Parameters:
+        n_travelers (int): Number of travelers.
+        arrival_date (str): Planned arrival date (e.g., "2025-07-01").
+        departure_date (str): Planned departure date (e.g., "2025-07-10").
+        departure (str): Departure location (e.g., "New York").
+        arrival (str): Destination location (e.g., "Paris").
+        budget (float): Total budget in euros.
 
-# manager agent
-manager_agent = CodeAgent(
-    model= LiteLLMModel(model_id = sonnet, api_key=os.environ['CLAUDE_API']),
-    tools=tools_list,
-    # managed_agents=managed_agents,
-    additional_authorized_imports=[],
-    planning_interval=5,
-    verbosity_level=2,
-    # final_answer_checks=[check_reasoning_and_plot],
-    max_steps=15,
-)
+    Returns:
+        str: A formatted travel plan proposal including three budget-tiered itineraries
+             with URLs for flights and accommodations.
+    """
+    # tools
+    airbnb_search = tool(run_research_agent)
+    tools_list = [airbnb_search]
 
-system_prompt = '''
-You are a helpful assistant who's mission is to plan travels for users. 
-You can manage 3 agents: 
-a flight agent that can find flights on google flights and outputs the dates, budget and url for booking,
-an airbnb agent that can find houses on airbnb and outputs the dates budget and url for booking purposes
-an activities agent that can propose activities and outputs a list of activities
+    sonnet = 'anthropic/claude-sonnet-4-20250514'
 
-Take the inputs of the three agents and combine the outputs into 3 differents travel plans with 3 budget tiers: low cost, medium cost and high cost
-all agents will outputs a list of options which differents prices, chose one of them in each 
-your output should follow the template:
-Budget tier = [budget tier]: 
-Dates = [arrival date, departure date]
-budget = [cost of chosen flight + cost of housing + estimation of activities cost]
-flight = [url of chosen flight]
-airbnb = [url of chosen house]
+    # manager agent
+    manager_agent = CodeAgent(
+        model= LiteLLMModel(model_id = sonnet, api_key=os.environ['ANTHROPIC_API_KEY']),
+        tools=tools_list,
+        additional_authorized_imports=[],
+        planning_interval=5,
+        verbosity_level=2,
+        # final_answer_checks=[check_reasoning_and_plot],
+        max_steps=15,
+    )
 
-'''
+    system_prompt = '''
+        You are a helpful assistant who's mission is to plan travels for users. 
+        You have 3 tools: 
+        a flight_search that can find flights on google flights and outputs the dates, budget and url for booking,
+        an airbnb_search tool that can find houses on airbnb and outputs the dates budget and url for booking purposes
+        an activities_search that can look for activities  and outputs a list of activities with their corresponding price and url
 
-# hardcoded outputs
-hardcoded_system_prompt = '''
-You are a helpful assistant who's mission is to plan travels for users. 
-You have 3 tools: 
-a flight agent that can find flights on google flights and outputs the dates, budget and url for booking,
-an airbnb search toolqa that can find houses on airbnb and outputs the dates budget and url for booking purposes
-an activities agent that can propose activities and outputs a list of activities
+        The 3 tools outputs follow this format:
+        - low:
+            - link:
+            - price:
+            - description:
+        - medium:
+            - link:
+            - price:
+            - description:
+        - high:
+            - link:
+            - price:
+            - description:
 
-Take the inputs of the three agents and combine the outputs into 3 differents travel plans with 3 budget tiers: low cost, medium cost and high cost
-your output should follow the template:
-Budget tier = [budget tier]: 
-Dates = [arrival date, departure date]
-budget = [cost of chosen flight + cost of housing + estimation of activities cost]
-flight = [url of chosen flight]
-airbnb = [url of chosen house]
+        Take the inputs of the three agents and combine the outputs into 3 differents travel plans with 3 budget tiers: low cost, medium cost and high cost
+        your output should follow the template:
 
-'''
+        '''
+    output_template = '''
+        Budget tier = [budget tier]: 
+        Dates = [arrival date, departure date]
+        budget = [cost of chosen flight + cost of housing + estimation of activities cost]
+        flight = [url of chosen flight]
+        airbnb = [url of chosen house]
 
-number_of_people = 2
-departure = 'Paris'
-arrival = 'Barcelona'
-dates = '24/06/2025 to 27/06/2025'
-budget = 500
-
-task = f'Propose a travel plan for {number_of_people} persons from {departure} to {arrival} for the following dates {dates} under the following budget {budget} euros'
-
-manager_agent.run(hardcoded_system_prompt + task)
+        '''
+    
+    task = f'Propose a travel plan for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}] under the following budget {budget} euros'
+    output = manager_agent.run(system_prompt + output_template + task)
+    return output
