@@ -1,53 +1,108 @@
-# hackathon-huggingface*
+# Travel Planning Agent
 
-Ok les loulous !
+An AI-powered travel planning system that generates personalized travel packages with flights, accommodations, and activities.
 
-Pour installer vous avez juste à faire:
+## Features
+
+- **Multi-budget Packages**: Generates three different budget tiers (low, medium, high) for each trip
+- **Comprehensive Planning**: Includes flights, accommodations, and activities
+- **Real-time Research**: Uses web search to find current prices and availability
+- **Structured Output**: Returns well-formatted travel packages with all necessary details
+
+## Installation
 
 ```bash
-git clone https://github.com/charles-azam/hackathon-huggingface.git
-cd hackathon-huggingface
-uv sync
+# Clone the repository
+git clone https://github.com/yourusername/travel-planning-agent.git
+cd travel-planning-agent
+
+# Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-Ensuite, vérifiez que l'environnement python de vscode soit bien `.venv`.
-
-## usage
-
-Pour rajouter un package faites `uv add`. Sinon refaites un `uv sync`.
-
-Pour vérifier que tout est bien installé, lancez:
-`uv run pytest tests`
-
-Vous pouvez aussi lancer ces commandes dans le terminal python:
+## Usage
 
 ```python
-from loulou.hello import hello_word
-print(hello_world)
+from loulou.travel_agent import run_travel_agent
+
+# Generate travel plans
+plans = run_travel_agent(
+    n_travelers=2,
+    arrival_date="2025-06-16",
+    departure_date="2025-06-26",
+    departure="Paris",
+    arrival="Tokyo"
+)
+
+# Print the results
+for package in plans.packages:
+    print(f"\n=== {package.title} ===")
+    print(f"Duration: {package.duration}")
+    print(f"Total Price: ${package.price}")
+    print("\nBudget Breakdown:")
+    print(f"- Flights: ${package.budgetBreakdown.flights}")
+    print(f"- Hotels: ${package.budgetBreakdown.hotels}")
+    print(f"- Activities: ${package.budgetBreakdown.activities}")
+    print(f"- Food: ${package.budgetBreakdown.food}")
 ```
 
-
-## Git
-
-Pour git je vous propose, afin que tout se passe bien d'utiliser le workflow suivant:
-
-```bash
-git checkout -b elias/coucou # pour faire sa branche
-git add 
-git commit
-git commit
-git commit
-git rebase -i HEAD~3 # si vous avez fait plusieurs commits, il est plus simple de les squash pour éviter les conflits
-
-# une fois que ça c'est prêt il faut se mettre à jour avec main
-git checkout main # on va sur main
-git pull # on s'assure d'avoir la dernière version de main
-git checkout elias/coucou # on retourne sur sa branche
-
-
-git rebase main # équivalent à git merge mais plus simple à debugger
-
-git push --force-with-lease
-# maintenant vous pouvez ouvrir votre PR
+## Project Structure
 
 ```
+.
+├── docs/
+│   └── travel_agent.py      # Main travel planning agent
+├── src/
+│   └── loulou/
+│       ├── activities_agent.py  # Activities recommendation agent
+│       ├── browser_use_tools.py # Browser automation tools
+│       ├── classes.py           # Pydantic models
+│       └── smolagents_tool.py   # Custom smolagents tools
+└── requirements.txt
+```
+
+## Components
+
+### Travel Agent
+The main agent that coordinates the entire travel planning process:
+- Researches flights and accommodations
+- Generates activity recommendations
+- Creates comprehensive travel packages
+
+### Activities Agent
+Specialized agent for recommending activities:
+- Suggests activities for different budget levels
+- Includes free activities and must-see attractions
+- Provides booking links and costs
+
+### Data Models
+Pydantic models for structured data:
+- `Packages`: Collection of travel packages
+- `Package`: Individual travel package
+- `BudgetBreakdown`: Cost breakdown
+- `Flights`: Flight information
+- `Hotel`: Accommodation details
+- `Activity`: Activity information
+
+## Dependencies
+
+- smolagents: For AI agent functionality
+- pydantic: For data validation
+- langchain: For structured output
+- selenium: For web automation
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
