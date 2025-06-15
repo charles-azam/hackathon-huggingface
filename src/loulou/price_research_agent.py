@@ -183,4 +183,5 @@ Do not give any other text than the yaml.
 
 
 if __name__ == "__main__":
-    run_research_agent()
+    results = run_research_agent(task="GO to https://www.google.com/travel/flights, search for a flight from paris to barcelona 16/06/2025 to 26/06/2025.", website_name="www.google.com/travel/flights", url_contains="search")
+    print(results)
