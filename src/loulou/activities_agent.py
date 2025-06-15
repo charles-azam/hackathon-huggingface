@@ -5,7 +5,8 @@ from smolagents import DuckDuckGoSearchTool
 import os
 from loulou.browser_use_tools import TASK_EXAMPLE, ChatAnthropic
 
-def run_activities_agent(task: str = TASK_EXAMPLE, ):
+
+def run_activities_agent(task: str):
     """
     Run the activities agent to recommend activities for a holiday trip.
     
@@ -33,44 +34,57 @@ def run_activities_agent(task: str = TASK_EXAMPLE, ):
     2. Provide a separate list of at least **5 free activities** (e.g., landmarks, public attractions, scenic spots). These should be things **not to miss**.
 
     3. Return the result as a JSON object, structured like this: 
-    {{
+    {
     "destination": "string",
     "num_people": number,
-    "recommendations": {{
+    "recommendations": {
         "low": [
-        {{
+        {
             "title": "string",
             "description": "string",
             "cost": number,
             "category": "string",
             "link": "string"
-        }}
+        }
         ],
         "medium": [...],
         "high": [...]
-    }},
+    },
     "free_activities": [
-        {{
+        {
         "title": "string",
         "description": "string",
         "category": "string",
         "link": "string"
-        }}
+        }
     ]
-    }}
+    }
     """
 
     research_request = f"""
     The original task is to : {task}
     """
-    llm: ChatAnthropic = ChatAnthropic(model="claude-sonnet-4-20250514")
 
-    # Function to run the agent with given inputs
+    # Initialize the model and agent
+    model = LiteLLMModel("claude-sonnet-4-20250514")
     agent = CodeAgent(
-        model=llm,
+        model=model,
         tools=[DuckDuckGoSearchTool()],
-        add_base_tools=False,
-        additional_authorized_imports=["json"])
+        additional_authorized_imports=["*"]
+    )
         
+    # Run the agent and get the response
     response = agent.run(research_request + activities_instructions)
-    return response
+    
+    # Handle the response based on its type
+    if hasattr(response, 'content'):
+        return response.content
+    elif isinstance(response, str):
+        return response
+    else:
+        return str(response)
+
+
+if __name__ == "__main__":
+    result = run_activities_agent("Plan activities for a family trip to Tokyo")
+    print(result)

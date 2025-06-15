@@ -51,9 +51,10 @@ def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
     # Get research results
     objective_flight = f'search for a flight for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}]'
     objective_housing = f'search for housing for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}]'
+    objective_activities = f'search for activities for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}]'
+    activities_info = run_activities_agent(objective_activities)
     output_airbnb = research_airbnb(objective_housing)
     output_flight = research_google_travel(objective_flight)
-    output_activities = run_activities_agent(objective_activities)
 
     # Initialize the agent with Claude model
     model = LiteLLMModel("claude-sonnet-4-20250514")
@@ -70,6 +71,9 @@ def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
 
         Accommodation Information:
         {accommodation_info}
+
+        Activities Information:
+        {activities_info}
 
         Requirements:
         - Number of travelers: {n_travelers}
@@ -113,7 +117,7 @@ def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
         
         Use the validate_package_json tool to validate the output. Give your final answer only if it passes the validation.
         """,
-        input_variables=["flight_info", "accommodation_info", "n_travelers", 
+        input_variables=["flight_info", "accommodation_info", "activities_info", "n_travelers", 
                         "arrival_date", "departure_date", "departure", "arrival"],
         partial_variables={"format_instructions": parser.get_format_instructions()}
     )
@@ -122,6 +126,7 @@ def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
     prompt = prompt_template.format(
         flight_info=output_flight,
         accommodation_info=output_airbnb,
+        activities_info=activities_info,
         n_travelers=n_travelers,
         arrival_date=arrival_date,
         departure_date=departure_date,
@@ -142,15 +147,5 @@ if __name__ == "__main__":
         arrival_date="2025-06-16",
         departure_date="2025-06-26",
         departure="Paris",
-        arrival="Barcelona"
+        arrival="Tokyo"
     )
-    print("\nGenerated Travel Plans:")
-    for package in plans.packages:
-        print(f"\n=== {package.title} ===")
-        print(f"Duration: {package.duration}")
-        print(f"Total Price: ${package.price}")
-        print("\nBudget Breakdown:")
-        print(f"- Flights: ${package.budgetBreakdown.flights}")
-        print(f"- Hotels: ${package.budgetBreakdown.hotels}")
-        print(f"- Activities: ${package.budgetBreakdown.activities}")
-        print(f"- Food: ${package.budgetBreakdown.food}")
