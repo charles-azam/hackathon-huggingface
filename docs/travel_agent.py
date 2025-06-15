@@ -52,13 +52,13 @@ def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
     objective_flight = f'search for a flight for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}]'
     objective_housing = f'search for housing for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}]'
     objective_activities = f'search for activities for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}]'
+    output_flight = research_google_travel(objective_flight)
     activities_info = run_activities_agent(objective_activities)
     with open("activities_info.txt", "w") as f:
         f.write(activities_info)
     output_airbnb = research_airbnb(objective_housing)
     with open("output_airbnb.txt", "w") as f:
         f.write(output_airbnb)
-    output_flight = research_google_travel(objective_flight)
     with open("output_flight.txt", "w") as f:
         f.write(output_flight)
 

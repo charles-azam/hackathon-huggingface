@@ -2,6 +2,8 @@
 
 An AI-powered travel planning system that generates personalized travel packages with flights, accommodations, and activities.
 
+We won third place !!!!!
+
 ## Features
 
 - **Multi-budget Packages**: Generates three different budget tiers (low, medium, high) for each trip
