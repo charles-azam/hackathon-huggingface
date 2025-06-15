@@ -12,7 +12,7 @@ from smolagents.agents import ActionStep
 from loulou.browser_use_tools import run_get_url_agent, TASK_EXAMPLE, ChatAnthropic
 
 
-def run_research_agent(task: str = TASK_EXAMPLE, website_name: str = "airbnb", url_contains: str = "homes", llm: ChatAnthropic = ChatAnthropic(model="claude-sonnet-4-20250514")) -> str:
+def find_three_candidates_on_website(task: str = TASK_EXAMPLE, website_name: str = "airbnb", url_contains: str = "homes", llm: ChatAnthropic = ChatAnthropic(model="claude-sonnet-4-20250514")) -> str:
     if "flight" in website_name:
         return """
 Final output:
@@ -28,110 +28,21 @@ Final output:
     - link: https://www.google.com/travel/flights/search?tfs=CBwQAhpKEgoyMDI1LTA2LTE2IiAKA09SWRIKMjAyNS0wNi0xNhoDQkNOKgJWWTIEODAxM2oMCAISCC9tLzA1cXRqcgwIAxIIL20vMDFmNjIaKBIKMjAyNS0wNi0yNmoMCAMSCC9tLzAxZjYycgwIAhIIL20vMDVxdGpAAUgBcAGCAQsI____________AZgBAQ&tfu=CmxDalJJWTE5T2RVbDVka3gzWkZGQlUwMUJhbWRDUnkwdExTMHRMUzB0WldwamEzQXlOa0ZCUVVGQlIyaFBkSFJOUkVRdGNXVkJFZ1pXV1Rnd01UTWFDZ2p1ZVJBQ0dnTkZWVkk0SEhEb2pBRT0SAggAIgA
     - price: 156€
     - description: Vueling direct flight Paris-Barcelona, 2h duration, round trip with premium service options
-- low:
-    - link: https://www.google.com/travel/flights/search?tfs=CBwQAhpKEgoyMDI1LTA2LTE2IiAKA09SWRIKMjAyNS0wNi0xNhoDQkNOKgJUTzIENDc1MGoMCAISCC9tLzA1cXRqcgwIAxIIL20vMDFmNjIaKBIKMjAyNS0wNi0yNmoMCAMSCC9tLzAxZjYycgwIAhIIL20vMDVxdGpAAUgBcAGCAQsI____________AZgBAQ&tfu=CmxDalJJYmtnNGFrOXpkVmRyUWtsQlRqWlBZV2RDUnkwdExTMHRMUzB0TFhkbWFHVTBNVUZCUVVGQlIyaFBkSFZyUjNjNFlqSkJFZ1pVVHpRM05UQWFDZ2lnVVJBQ0dnTkZWVkk0SEhEeVhRPT0SAggAIgA
-    - price: 104€
-    - description: Transavia direct flight Paris-Barcelona, 2h duration, round trip with multiple time options
-- medium:
-    - link: https://www.google.com/travel/flights/search?tfs=CBwQAhpKEgoyMDI1LTA2LTE2IiAKA09SWRIKMjAyNS0wNi0xNhoDQkNOKgJUTzIENDgwMGoMCAISCC9tLzA1cXRqcgwIAxIIL20vMDFmNjIaKBIKMjAyNS0wNi0yNmoMCAMSCC9tLzAxZjYycgwIAhIIL20vMDVxdGpAAUgBcAGCAQsI____________AZgBAQ&tfu=CmxDalJJVXpGaGVUWTNkV3RDYlc5QlQwOXVUbmRDUnkwdExTMHRMUzB0TFhkaVltWjVORUZCUVVGQlIyaFBkSFpaUzNGMGVWZEJFZ1pVVHpRNE1EQWFDZ2pBVnhBQ0dnTkZWVkk0SEhDT1pRPT0SAggAIgMKATA
-    - price: 112€
-    - description: Transavia direct flight Paris-Barcelona, 2h duration, round trip with multiple departure times
-- high:
-    - link: https://www.google.com/travel/flights/search?tfs=CBwQAhpKEgoyMDI1LTA2LTE2IiAKA09SWRIKMjAyNS0wNi0xNhoDQkNOKgJWWTIEODAxM2oMCAISCC9tLzA1cXRqcgwIAxIIL20vMDFmNjIaKBIKMjAyNS0wNi0yNmoMCAMSCC9tLzAxZjYycgwIAhIIL20vMDVxdGpAAUgBcAGCAQsI____________AZgBAQ&tfu=CmxDalJJWTE5T2RVbDVka3gzWkZGQlUwMUJhbWRDUnkwdExTMHRMUzB0WldwamEzQXlOa0ZCUVVGQlIyaFBkSFJOUkVRdGNXVkJFZ1pXV1Rnd01UTWFDZ2p1ZVJBQ0dnTkZWVkk0SEhEb2pBRT0SAggAIgA
-    - price: 156€
-    - description: Vueling direct flight Paris-Barcelona, 2h duration, round trip with premium service options
-
 """
     if website_name == "airbnb":
         return """
-Final output:
-Thought: Perfect! I can see the pricing information for the high budget option. It's 82€ per night with a total of 959€ for 10 nights. This is a modern renovated studio with excellent location on Avenida Paralel. 
-
-Now I have all three budget options:
-
-1. LOW budget: Carolina's place - 77€ per night (804€ total)
-2. MEDIUM budget: Arief's place - 77€ per night (771€ total) 
-3. HIGH budget: Studio with balcony - 82€ per night (959€ total)
-
-Actually, looking at the prices, I need to adjust the categorization based on the total costs:
-- LOW: 771€ total (Arief's place)
-- MEDIUM: 804€ total (Carolina's place)
-- HIGH: 959€ total (Studio with balcony)
-
-Let me finalize the information:
-
-Code:
-```py
-# Store the high budget information
-high_budget_info = {
-    'link': high_budget_url,
-    'price': '82€ per night (959€ total)',
-    'description': 'Joli studio avec balcon ! Emplacement idéal - Modern renovated studio with balcony, excellent location on Avenida Paralel, close to port and Rambla'
-}
-
-# Final categorization based on total costs
-final_results = {
-    'low': {
-        'link': 'https://www.airbnb.fr/rooms/1204325388447050009?adults=2&check_in=2025-06-16&check_out=2025-06-26&guests=2&search_mode=regular_search&category_tag=Tag%3A8678&photo_id=1965799709&source_impression_id=p3_1749988526_P3savPxDcmUDopEC&previous_page_section_name=1000&federated_search_id=f3f82737-9c10-4867-a55a-ecaf22f2f7a3',
-        'price': '77€ per night (771€ total)',
-        'description': 'Chambre dans le centre avec air conditionné - Room in apartment with air conditioning in the center of Barcelona'
-    },
-    'medium': {
-        'link': 'https://www.airbnb.fr/rooms/1409980769386304321?adults=2&check_in=2025-06-16&check_out=2025-06-26&guests=2&search_mode=regular_search&category_tag=Tag%3A8678&photo_id=2155293160&source_impression_id=p3_1749988662_P3PTujRArrwsVOAQ&previous_page_section_name=1000&federated_search_id=0c23fe5d-6bc0-484d-bec9-e8f414f510dd',
-        'price': '77€ per night (804€ total)',
-        'description': 'Chambre privée pour 2 à Borne - Private room for 2 travelers with shared bathroom in apartment in Born'
-    },
-    'high': high_budget_info
-}
-
-print("Final results collected!")
-```<end_code>
-Calling tools:
-[{'id': 'call_21', 'type': 'function', 'function': {'name': 'python_interpreter', 'arguments': '# Store the high budget information\nhigh_budget_info = {\n    \'link\': high_budget_url,\n    \'price\': \'82€ per night (959€ total)\',\n    \'description\': \'Joli studio avec balcon ! Emplacement idéal - Modern renovated studio with balcony, excellent location on Avenida Paralel, close to port and Rambla\'\n}\n\n# Final categorization based on total costs\nfinal_results = {\n    \'low\': {\n        \'link\': \'https://www.airbnb.fr/rooms/1204325388447050009?adults=2&check_in=2025-06-16&check_out=2025-06-26&guests=2&search_mode=regular_search&category_tag=Tag%3A8678&photo_id=1965799709&source_impression_id=p3_1749988526_P3savPxDcmUDopEC&previous_page_section_name=1000&federated_search_id=f3f82737-9c10-4867-a55a-ecaf22f2f7a3\',\n        \'price\': \'77€ per night (771€ total)\',\n        \'description\': \'Chambre dans le centre avec air conditionné - Room in apartment with air conditioning in the center of Barcelona\'\n    },\n    \'medium\': {\n        \'link\': \'https://www.airbnb.fr/rooms/1409980769386304321?adults=2&check_in=2025-06-16&check_out=2025-06-26&guests=2&search_mode=regular_search&category_tag=Tag%3A8678&photo_id=2155293160&source_impression_id=p3_1749988662_P3PTujRArrwsVOAQ&previous_page_section_name=1000&federated_search_id=0c23fe5d-6bc0-484d-bec9-e8f414f510dd\',\n        \'price\': \'77€ per night (804€ total)\',\n        \'description\': \'Chambre privée pour 2 à Borne - Private room for 2 travelers with shared bathroom in apartment in Born\'\n    },\n    \'high\': high_budget_info\n}\n\nprint("Final results collected!")'}}]
-Thought: Perfect! I can see the pricing information for the high budget option. It's 82€ per night with a total of 959€ for 10 nights. This is a modern renovated studio with excellent location on Avenida Paralel. 
-
-Now I have all three budget options:
-
-1. LOW budget: Carolina's place - 77€ per night (804€ total)
-2. MEDIUM budget: Arief's place - 77€ per night (771€ total) 
-3. HIGH budget: Studio with balcony - 82€ per night (959€ total)
-
-Actually, looking at the prices, I need to adjust the categorization based on the total costs:
-- LOW: 771€ total (Arief's place)
-- MEDIUM: 804€ total (Carolina's place)
-- HIGH: 959€ total (Studio with balcony)
-
-Let me finalize the information:
-
-Code:
-```py
-# Store the high budget information
-high_budget_info = {
-    'link': high_budget_url,
-    'price': '82€ per night (959€ total)',
-    'description': 'Joli studio avec balcon ! Emplacement idéal - Modern renovated studio with balcony, excellent location on Avenida Paralel, close to port and Rambla'
-}
-
-# Final categorization based on total costs
-final_results = {
-    'low': {
-        'link': 'https://www.airbnb.fr/rooms/1204325388447050009?adults=2&check_in=2025-06-16&check_out=2025-06-26&guests=2&search_mode=regular_search&category_tag=Tag%3A8678&photo_id=1965799709&source_impression_id=p3_1749988526_P3savPxDcmUDopEC&previous_page_section_name=1000&federated_search_id=f3f82737-9c10-4867-a55a-ecaf22f2f7a3',
-        'price': '77€ per night (771€ total)',
-        'description': 'Chambre dans le centre avec air conditionné - Room in apartment with air conditioning in the center of Barcelona'
-    },
-    'medium': {
-        'link': 'https://www.airbnb.fr/rooms/1409980769386304321?adults=2&check_in=2025-06-16&check_out=2025-06-26&guests=2&search_mode=regular_search&category_tag=Tag%3A8678&photo_id=2155293160&source_impression_id=p3_1749988662_P3PTujRArrwsVOAQ&previous_page_section_name=1000&federated_search_id=0c23fe5d-6bc0-484d-bec9-e8f414f510dd',
-        'price': '77€ per night (804€ total)',
-        'description': 'Chambre privée pour 2 à Borne - Private room for 2 travelers with shared bathroom in apartment in Born'
-    },
-    'high': high_budget_info
-}
-
-print("Final results collected!")
-```<end_code>
-Calling tools:
-[{'id': 'call_21', 'type': 'function', 'function': {'name': 'python_interpreter', 'arguments': '# Store the high budget information\nhigh_budget_info = {\n    \'link\': high_budget_url,\n    \'price\': \'82€ per night (959€ total)\',\n    \'description\': \'Joli studio avec balcon ! Emplacement idéal - Modern renovated studio with balcony, excellent location on Avenida Paralel, close to port and Rambla\'\n}\n\n# Final categorization based on total costs\nfinal_results = {\n    \'low\': {\n        \'link\': \'https://www.airbnb.fr/rooms/1204325388447050009?adults=2&check_in=2025-06-16&check_out=2025-06-26&guests=2&search_mode=regular_search&category_tag=Tag%3A8678&photo_id=1965799709&source_impression_id=p3_1749988526_P3savPxDcmUDopEC&previous_page_section_name=1000&federated_search_id=f3f82737-9c10-4867-a55a-ecaf22f2f7a3\',\n        \'price\': \'77€ per night (771€ total)\',\n        \'description\': \'Chambre dans le centre avec air conditionné - Room in apartment with air conditioning in the center of Barcelona\'\n    },\n    \'medium\': {\n        \'link\': \'https://www.airbnb.fr/rooms/1409980769386304321?adults=2&check_in=2025-06-16&check_out=2025-06-26&guests=2&search_mode=regular_search&category_tag=Tag%3A8678&photo_id=2155293160&source_impression_id=p3_1749988662_P3PTujRArrwsVOAQ&previous_page_section_name=1000&federated_search_id=0c23fe5d-6bc0-484d-bec9-e8f414f510dd\',\n        \'price\': \'77€ per night (804€ total)\',\n        \'description\': \'Chambre privée pour 2 à Borne - Private room for 2 travelers with shared bathroom in apartment in Born\'\n    },\n    \'high\': high_budget_info\n}\n\nprint("Final results collected!")'}}]    
-
+- low:
+    - link: https://www.airbnb.fr/rooms/1426696850530973315?adults=2&check_in=2025-06-19&check_out=2025-06-28&guests=2&search_mode=regular_search&category_tag=Tag%3A8678&children=0&infants=0&pets=0&photo_id=2183400057&source_impression_id=p3_1749990446_P3W6bU3PbD5pcYC8&previous_page_section_name=1000&federated_search_id=cd9b51e4-59fe-47ef-8610-68f17a502370
+    - price: 94€ per night (873€ total)
+    - description: Petite chambre privée près de la cathédrale - Private room for 2 people with individual lock and key for comfort, located in a shared apartment in the Gothic quarter near Barcelona cathedral
+- medium:
+    - link: https://www.airbnb.fr/rooms/1177998676371545286?adults=2&check_in=2025-06-16&check_out=2025-06-26&guests=2&search_mode=regular_search&source_impression_id=p3_1749990558_P35L4tWmLW_rLQsm&previous_page_section_name=1000&federated_search_id=505d111a-74a6-49ca-8ec6-953a02b2a3b4
+    - price: 84€ per night (1044€ total)
+    - description: Centre de 6 mètres de l'Español Stadium - Comfortable renovated apartment 20 min by metro from center, 5 min from Arco del Triunfo metro station. Located in Cornellà district with restaurants, bakeries, bars. 1 double bedroom and 2 singles, equipped kitchen, living room, bathroom with shower, air conditioning, wifi, Smart TV
+- high:
+    - link: https://www.airbnb.fr/rooms/11372386?adults=2&check_in=2025-06-16&check_out=2025-06-26&guests=2&search_mode=regular_search&source_impression_id=p3_1749990589_P3jRdmySjVJUfRSM&previous_page_section_name=1000&federated_search_id=6c568e77-574c-4dd4-bf71-eb18fc40fc11
+    - price: 161€ per night (1912€ total)
+    - description: Appart. Barcelone-Congrès - Modern apartment in a building next to Fira Barcelona and GranVia2 commercial center with great choice of leisure activities. Well connected to airport, 2 metro lines, bus, train and taxi. Located on Plaza Europa with stunning city views and modern amenities
 """
     
     link_with_choices = run_get_url_agent(task=task, llm=llm, url_contains=url_contains)
@@ -289,8 +200,6 @@ Give me the output as yaml like this:
     - price:
     - description:
 
-If you have only one candidate, return it as low or medium or high depending on the price.
-
 Do not give any other text than the yaml.
 
     """
@@ -299,8 +208,3 @@ Do not give any other text than the yaml.
     print("Final output:")
     print(agent_output)
     return agent_output
-
-
-if __name__ == "__main__":
-    results = run_research_agent()
-    print(results)

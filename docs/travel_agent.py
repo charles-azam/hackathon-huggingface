@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 import helium
 
 # import agents
-from src.loulou.price_research_agent import run_research_agent
+from loulou.price_research_agent import find_three_candidates_on_website
 
 
 
