@@ -12,7 +12,7 @@ from smolagents.agents import ActionStep
 from loulou.browser_use_tools import run_get_url_agent, TASK_EXAMPLE, ChatAnthropic
 
 
-def run_research_agent(task: str = TASK_EXAMPLE, website_name: str = "airbnb", url_contains: str = "homes", llm: ChatAnthropic = ChatAnthropic(model="claude-sonnet-4-20250514")) -> str:
+def find_three_candidates_on_website(task: str = TASK_EXAMPLE, website_name: str = "airbnb", url_contains: str = "homes", llm: ChatAnthropic = ChatAnthropic(model="claude-sonnet-4-20250514")) -> str:
     if "flight" in website_name:
         return """
 Final output:
@@ -208,7 +208,3 @@ Do not give any other text than the yaml.
     print("Final output:")
     print(agent_output)
     return agent_output
-
-
-if __name__ == "__main__":
-    results = run_research_agent()

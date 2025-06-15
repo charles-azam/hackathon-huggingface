@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 import helium
 
 # import agents
-from loulou.price_research_agent import run_research_agent
+from loulou.price_research_agent import find_three_candidates_on_website
 
 
 haiku = 'anthropic/claude-3-5-haiku-20241022'
@@ -22,7 +22,7 @@ sonnet = 'anthropic/claude-sonnet-4-20250514'
 # managed_agents = [flight_agent, airbnb_agent, activities_agent]
 
 # tools
-airbnb_search = tool(run_research_agent)
+airbnb_search = tool(find_three_candidates_on_website)
 tools_list = [airbnb_search]
 # final checks
 
