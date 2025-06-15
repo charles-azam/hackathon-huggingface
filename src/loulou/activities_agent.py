@@ -5,9 +5,15 @@ from smolagents import DuckDuckGoSearchTool
 import os
 from loulou.browser_use_tools import TASK_EXAMPLE, ChatAnthropic
 
-def run_activities_agent(task: str = TASK_EXAMPLE, llm: ChatAnthropic = ChatAnthropic(model="claude-sonnet-4-20250514")):
+def run_activities_agent(task: str = TASK_EXAMPLE, ):
     """
     Run the activities agent to recommend activities for a holiday trip.
+    
+    Args:
+        task (str): The task to recommend activities for a holiday trip.
+        
+    Returns:
+        str: The result of the activities agent.
     """
 
     activities_instructions = """
@@ -57,6 +63,7 @@ def run_activities_agent(task: str = TASK_EXAMPLE, llm: ChatAnthropic = ChatAnth
     research_request = f"""
     The original task is to : {task}
     """
+    llm: ChatAnthropic = ChatAnthropic(model="claude-sonnet-4-20250514")
 
     # Function to run the agent with given inputs
     agent = CodeAgent(

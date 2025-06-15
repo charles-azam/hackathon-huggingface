@@ -5,7 +5,7 @@ from langchain.output_parsers import PydanticOutputParser
 from loulou.smolagents_tool import research_airbnb, research_google_travel
 from loulou.classes import Packages
 import json
-
+from loulou.activities_agent import run_activities_agent
 
 @tool
 def validate_package_json(json_str: str) -> bool:
@@ -53,6 +53,7 @@ def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
     objective_housing = f'search for housing for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}]'
     output_airbnb = research_airbnb(objective_housing)
     output_flight = research_google_travel(objective_flight)
+    output_activities = run_activities_agent(objective_activities)
 
     # Initialize the agent with Claude model
     model = LiteLLMModel("claude-sonnet-4-20250514")
@@ -130,6 +131,8 @@ def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
 
     # Run the agent
     result = agent.run(prompt)
+    with open("result.txt", "w") as f:
+        f.write(result)
     return Packages.model_validate_json(result)
 
 
