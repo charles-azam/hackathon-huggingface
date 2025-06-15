@@ -38,17 +38,34 @@ plans = run_travel_agent(
     arrival="Tokyo"
 )
 
-# Print the results
-for package in plans.packages:
-    print(f"\n=== {package.title} ===")
-    print(f"Duration: {package.duration}")
-    print(f"Total Price: ${package.price}")
-    print("\nBudget Breakdown:")
-    print(f"- Flights: ${package.budgetBreakdown.flights}")
-    print(f"- Hotels: ${package.budgetBreakdown.hotels}")
-    print(f"- Activities: ${package.budgetBreakdown.activities}")
-    print(f"- Food: ${package.budgetBreakdown.food}")
 ```
+## Technical description
+
+
+
+## Technical description
+![archi.webp](archi.webp)
+
+Technologies:
+- smolagents
+- anthropic
+- huggingface
+- browser-use
+
+In this project we have 4 agents:
+- a flight agent
+- a housing agent
+- an activities agent
+- a structure agent
+
+**Flight and housing agent**:
+Using smolagents and selenium was extremely long. So what we used browser-use to get started and once we got to the good url with the search result, we would use a callback to stop browser-use and start smolagents with selenium.
+
+For the activities agent, we used a classic smolagent along with duckduckgo.
+
+In the end, we just wanted to get a structured output for the back which was extremely hard to do with a simple llm called so we ended up using smolagents to get a structured output with all the results
+
+
 
 ## Project Structure
 
@@ -64,7 +81,6 @@ for package in plans.packages:
 │       └── smolagents_tool.py   # Custom smolagents tools
 └── requirements.txt
 ```
-
 ## Components
 
 ### Travel Agent
