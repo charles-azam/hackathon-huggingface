@@ -146,8 +146,7 @@ Important guidelines:
 
     # Example research request
     research_request = f"""
-The original task is to go to {website_name}, search for a 2 bedroom apartment in the center of Barcelona for 2 people for 10 nights from 16/06/2025.
-
+The original task is to : {task}
 Another agent already did the search and got to this page:
 
 {link_with_choices}
