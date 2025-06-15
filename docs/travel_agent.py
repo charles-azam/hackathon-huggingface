@@ -1,20 +1,11 @@
 import os
-from smolagents import CodeAgent, DuckDuckGoSearchTool, LiteLLMModel,InferenceClientModel, OpenAIServerModel
-from langchain_community.document_loaders import WikipediaLoader
-from smolagents import tool
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-import helium
-
-# import agents
+from pydantic_ai import Agent
 from loulou.smolagents_tool import research_airbnb, research_google_travel
-
+from loulou.classes import Packages
 
 
 def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
-                      departure: str,arrival: str, budget: float
-) -> str:
+                    departure: str, arrival: str) -> Packages:
     """
     Generates personalized travel plans for a group of travelers using an AI-powered planning agent.
 
@@ -29,65 +20,88 @@ def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
         departure_date (str): Planned departure date (e.g., "2025-07-10").
         departure (str): Departure location (e.g., "New York").
         arrival (str): Destination location (e.g., "Paris").
-        budget (float): Total budget in euros.
 
     Returns:
-        str: A formatted travel plan proposal including three budget-tiered itineraries
-             with URLs for flights and accommodations.
+        Packages: A structured travel plan proposal including three budget-tiered itineraries
+                  with URLs for flights and accommodations.
     """
-    # tools
-    tools_list = [research_airbnb, research_google_travel]
+    # Get research results
+    objective_flight = f'search for a flight for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}]'
+    objective_housing = f'search for housing for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}]'
+    output_airbnb = research_airbnb(objective_housing)
+    output_flight = research_google_travel(objective_flight)
 
-    sonnet = 'anthropic/claude-sonnet-4-20250514'
+    # Initialize the agent with our Packages model
+    agent = Agent('claude-sonnet-4-20250514', output_type=Packages)
 
-    # manager agent
-    manager_agent = CodeAgent(
-        model= LiteLLMModel(model_id = sonnet, api_key=os.environ['ANTHROPIC_API_KEY']),
-        tools=tools_list,
-        additional_authorized_imports=[],
-        planning_interval=5,
-        verbosity_level=2,
-        # final_answer_checks=[check_reasoning_and_plot],
-        max_steps=15,
-    )
+    # Create the prompt
+    prompt = f"""
+    Create a travel plan with three different budget tiers (low, medium, high) based on the following research:
 
-    system_prompt = '''
-        You are a helpful assistant who's mission is to plan travels for users. 
-        You have 3 tools: 
-        a research_google_travel that can find flights on google flights and outputs the dates, budget and url for booking,
-        an research_airbnb tool that can find houses on airbnb and outputs the dates budget and url for booking purposes
-        an activities_search that can look for activities  and outputs a list of activities with their corresponding price and url
+    Flight Information:
+    {output_flight}
 
-        The 3 tools outputs follow this format:
-        - low:
-            - link:
-            - price:
-            - description:
-        - medium:
-            - link:
-            - price:
-            - description:
-        - high:
-            - link:
-            - price:
-            - description:
+    Accommodation Information:
+    {output_airbnb}
 
-        Take the inputs of the three agents and combine the outputs into 3 differents travel plans with 3 budget tiers: low cost, medium cost and high cost
-        your output should follow the template:
+    Requirements:
+    - Number of travelers: {n_travelers}
+    - Dates: {arrival_date} to {departure_date}
+    - From: {departure}
+    - To: {arrival}
 
-        '''
-    output_template = '''
-        Budget tier = [budget tier]: 
-        Dates = [arrival date, departure date]
-        budget = [cost of chosen flight + cost of housing + estimation of activities cost]
-        flight = [url of chosen flight]
-        airbnb = [url of chosen house]
+    Create three packages with the following structure:
 
-        '''
-    
-    task = f'Propose a travel plan for {n_travelers} persons from {departure} to {arrival} for the following dates [{arrival_date} to {departure_date}] under the following budget {budget} euros'
-    output = manager_agent.run(system_prompt + output_template + task)
-    return output
+    1. Low budget package:
+       - Focus on cost-effective options while maintaining basic comfort
+       - Use budget airlines and hostels/guesthouses
+       - Include free or low-cost activities
+       - Total price should be under 1000 euros per person
+
+    2. Medium budget package:
+       - Balance between cost and comfort
+       - Use regular airlines and 3-star hotels
+       - Mix of free and paid activities
+       - Total price should be between 1000-2000 euros per person
+
+    3. High budget package:
+       - Premium options with luxury amenities
+       - Use major airlines and 4-5 star hotels
+       - Include premium activities and experiences
+       - Total price should be over 2000 euros per person
+
+    For each package, ensure:
+    - All prices are in euros
+    - Flight times are realistic
+    - Hotel ratings are between 0-5 stars
+    - URLs are valid and accessible
+    - Activities are appropriate for the budget level
+    - Total price matches the sum of all components
+
+    If any information is missing from the research, make reasonable assumptions based on typical prices and options for the destination.
+    """
+
+    # Run the agent
+    result = agent.run_sync(prompt)
+    print(f"Usage: {result.usage()}")
+    return result.output
+
 
 if __name__ == "__main__":
-    run_travel_agent(n_travelers=2, arrival_date="2025-06-16", departure_date="2025-06-26", departure="Paris", arrival="Barcelona", budget=1000)
+    plans = run_travel_agent(
+        n_travelers=2,
+        arrival_date="2025-06-16",
+        departure_date="2025-06-26",
+        departure="Paris",
+        arrival="Barcelona"
+    )
+    print("\nGenerated Travel Plans:")
+    for package in plans.packages:
+        print(f"\n=== {package.title} ===")
+        print(f"Duration: {package.duration}")
+        print(f"Total Price: ${package.price}")
+        print("\nBudget Breakdown:")
+        print(f"- Flights: ${package.budgetBreakdown.flights}")
+        print(f"- Hotels: ${package.budgetBreakdown.hotels}")
+        print(f"- Activities: ${package.budgetBreakdown.activities}")
+        print(f"- Food: ${package.budgetBreakdown.food}")

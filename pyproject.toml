@@ -32,6 +32,7 @@ dependencies = [
     "browser-use[memory]>=0.2.7",
     "langchain-anthropic>=0.3.15",
     "langchain-community>=0.3.24",
+    "pydantic-ai>=0.2.18",
 ]
 
 
