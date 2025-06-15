@@ -40,7 +40,7 @@ def research_airbnb(task: str,) -> str:
     return find_three_candidates_on_website(task="GO to airbnb, " + task, website_name="airbnb", url_contains="homes", llm=llm)
 
 @tool
-def research_google_travel(task: str = "airbnb_research", llm: ChatAnthropic = ChatAnthropic(model="claude-sonnet-4-20250514")) -> str:
+def research_google_travel(task: str) -> str:
     """
     Find three candidates on Google Flights for a given task.
     
