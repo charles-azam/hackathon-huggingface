@@ -2,7 +2,7 @@ from loulou.price_research_agent import find_three_candidates_on_website
 from loulou.browser_use_tools import run_get_url_agent
 from langchain_anthropic import ChatAnthropic
 from smolagents import tool
-
+from activities_agent import run_activities_agent
 
 @tool
 def research_airbnb(task: str,) -> str:
@@ -72,3 +72,17 @@ def research_google_travel(task: str) -> str:
 
     """
     return find_three_candidates_on_website(task="GO to https://www.google.com/travel/flights, " + task, website_name="www.google.com/travel/flights", url_contains="search")
+
+@tool
+def research_activities(task: str = "original_task", llm: ChatAnthropic = ChatAnthropic(model="claude-sonnet-4-20250514")) -> str:
+    """
+    Run the activities agent to recommend activities for a holiday trip.
+    
+    Args:
+        task (str, optional): The task to run the activities agent on.
+        llm (ChatAnthropic, optional): The language model to use. Defaults to ChatAnthropic(model="claude-sonnet-4-20250514").
+    
+    Returns:
+        str: The result of the activities agent.
+    """
+    return run_activities_agent(task=task, llm=llm)

@@ -9,7 +9,6 @@ def run_activities_agent(task: str = TASK_EXAMPLE, llm: ChatAnthropic = ChatAnth
     """
     Run the activities agent to recommend activities for a holiday trip.
     """
-    model = LiteLLMModel(model_id="anthropic/claude-3-5-sonnet-latest", api_key=os.getenv("ANTHROPIC_API_KEY"))
 
     activities_instructions = """
     You are a travel planning assistant. Your task is to recommend activities for a holiday trip.
@@ -61,15 +60,10 @@ def run_activities_agent(task: str = TASK_EXAMPLE, llm: ChatAnthropic = ChatAnth
 
     # Function to run the agent with given inputs
     agent = CodeAgent(
-        model=model,
+        model=llm,
         tools=[DuckDuckGoSearchTool()],
         add_base_tools=False,
         additional_authorized_imports=["json"])
         
     response = agent.run(research_request + activities_instructions)
-    print("Final output:")
-    print(response)
     return response
-
-if __name__ == "__main__":
-    run_activities_agent(task=TASK_EXAMPLE)
