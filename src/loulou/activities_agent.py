@@ -3,7 +3,7 @@ from smolagents import CodeAgent, LiteLLMModel
 from smolagents import WebSearchTool
 from smolagents import DuckDuckGoSearchTool
 import os
-from browser_use_tools import TASK_EXAMPLE, ChatAnthropic
+from loulou.browser_use_tools import TASK_EXAMPLE, ChatAnthropic
 
 def run_activities_agent(task: str = TASK_EXAMPLE, llm: ChatAnthropic = ChatAnthropic(model="claude-sonnet-4-20250514")):
     """

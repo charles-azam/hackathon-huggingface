@@ -2,7 +2,7 @@ from loulou.price_research_agent import find_three_candidates_on_website
 from loulou.browser_use_tools import run_get_url_agent
 from langchain_anthropic import ChatAnthropic
 from smolagents import tool
-from activities_agent import run_activities_agent
+from loulou.activities_agent import run_activities_agent
 
 @tool
 def research_airbnb(task: str,) -> str:
