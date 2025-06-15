@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 import helium
 
 # import agents
-from loulou.price_research_agent import find_three_candidates_on_website
+from loulou.smolagents_tool import research_airbnb, research_google_travel
 
 
 
@@ -36,8 +36,7 @@ def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
              with URLs for flights and accommodations.
     """
     # tools
-    airbnb_search = tool(run_research_agent)
-    tools_list = [airbnb_search]
+    tools_list = [research_airbnb, research_google_travel]
 
     sonnet = 'anthropic/claude-sonnet-4-20250514'
 
@@ -55,8 +54,8 @@ def run_travel_agent(n_travelers: int, arrival_date: str, departure_date: str,
     system_prompt = '''
         You are a helpful assistant who's mission is to plan travels for users. 
         You have 3 tools: 
-        a flight_search that can find flights on google flights and outputs the dates, budget and url for booking,
-        an airbnb_search tool that can find houses on airbnb and outputs the dates budget and url for booking purposes
+        a research_google_travel that can find flights on google flights and outputs the dates, budget and url for booking,
+        an research_airbnb tool that can find houses on airbnb and outputs the dates budget and url for booking purposes
         an activities_search that can look for activities  and outputs a list of activities with their corresponding price and url
 
         The 3 tools outputs follow this format:
